@@ -1,0 +1,17 @@
+.filter-criterium {
+  display: flex;
+      justify-content: space-between;
+      padding-left: 10px;
+      padding-right: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+      border: 1px solid;
+      border-color: var(--clr-label-blue-bg-color, #00567a);
+      border-radius: var(--clr-btn-border-radius, 0.15rem);
+}
+
+.filter-preview-box {
+  margin-top: 20px;
+  border: 1px solid black;
+  padding: 5px 10px;
+}

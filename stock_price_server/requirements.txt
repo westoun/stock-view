@@ -1,0 +1,9 @@
+Flask==1.1.2
+Flask-Cors==3.0.10
+numpy==1.19.2
+pandas==1.1.2
+psycopg2==2.7.7
+python-dateutil==2.8.1
+python-dotenv==0.18.0
+SQLAlchemy==1.4.2
+wallstreet==0.3.1

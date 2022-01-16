@@ -1,0 +1,150 @@
+<div class="kairos-space-between">
+  <div style="width: 80%">
+    <div class="kairos-space-between" style="width: 100%">
+      <div style="width: 50%; height: fit-content">
+        <h4>History Period</h4>
+        <div>
+          <button class="btn btn-outline" (click)="onHistoryPeriodClicked(20)">
+            20 years
+          </button>
+          <button class="btn btn-outline" (click)="onHistoryPeriodClicked(10)">
+            10 years
+          </button>
+          <button class="btn btn-outline" (click)="onHistoryPeriodClicked(5)">
+            5 years
+          </button>
+        </div>
+      </div>
+      <div style="width: 50%; height: fit-content">
+        <h4>Forecast Period</h4>
+        <div>
+          <button class="btn btn-outline" (click)="onGrowthPeriodClicked(1)">
+            1 year
+          </button>
+          <button class="btn btn-outline" (click)="onGrowthPeriodClicked(5)">
+            5 years
+          </button>
+          <button class="btn btn-outline" (click)="onGrowthPeriodClicked(10)">
+            10 years
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h4>Earnings per Share</h4>
+    </div>
+    <div
+      class="kairos-center-content"
+      style="width: 100%; height: 50vh; margin-top: 10px"
+    >
+      <ngx-charts-line-chart
+        *ngIf="displayedIncomeData"
+        showXAxisLabel="true"
+        showYAxisLabel="true"
+        xAxis="true"
+        yAxis="true"
+        [results]="displayedIncomeData"
+      >
+      </ngx-charts-line-chart>
+    </div>
+    <div
+      *ngIf="
+        discountedCashflowData &&
+        displayedIncomeData &&
+        displayedIncomeData.length > 1 &&
+        displayedIncomeData[1].series
+      "
+    >
+      <h4>Growth Period</h4>
+      <div style="display: flex; flex-wrap: wrap">
+        <div *ngFor="let dataPoint of displayedIncomeData[1].series">
+          <clr-input-container>
+            <label>{{ dataPoint.name | date }}</label>
+            <input
+              clrInput
+              type="number"
+              placeholder="Fill me in, scotty!"
+              name="name"
+              [(ngModel)]="dataPoint.value"
+              (ngModelChange)="onParameterChanged()"
+            />
+          </clr-input-container>
+        </div>
+      </div>
+
+      <h4>Other Parameters</h4>
+      <div style="display: flex; flex-wrap: wrap">
+        <clr-input-container>
+          <label>Eternal Growth Rate (in %)</label>
+          <input
+            clrInput
+            type="number"
+            placeholder="Fill me in, scotty!"
+            name="name"
+            [(ngModel)]="discountedCashflowData.eternalGrowthRate"
+            (ngModelChange)="onParameterChanged()"
+          />
+        </clr-input-container>
+        <clr-input-container>
+          <label>Discount Rate (in %)</label>
+          <input
+            clrInput
+            type="number"
+            placeholder="Fill me in, scotty!"
+            name="name"
+            [(ngModel)]="discountedCashflowData.discountRate"
+            (ngModelChange)="onParameterChanged()"
+          />
+        </clr-input-container>
+      </div>
+
+      <div>
+        <button
+          style="margin-top: 24px"
+          class="btn btn-block btn-block-outline"
+          [disabled]="
+            !(
+              discountedCashflowData.discountRate &&
+              discountedCashflowData.eternalGrowthRate !== null &&
+              discountedCashflowData.predictedIncomeData &&
+              discountedCashflowData.predictedIncomeData.series &&
+              discountedCashflowData.predictedIncomeData.series.length > 0
+            )
+          "
+          (click)="onComputeValueClicked()"
+        >
+          Compute Net Present Value
+        </button>
+      </div>
+
+      <div *ngIf="discountedCashflowData && discountedCashflowData.fairValue">
+        {{discountedCashflowData.fairValue | number}}
+      </div>
+    </div>
+  </div>
+
+  <div style="width: 20%">
+    <h4>Valuation Type</h4>
+
+    <div>
+      <clr-dropdown>
+        <button class="btn btn-outline-primary" clrDropdownTrigger>
+          Valuation Method
+          <clr-icon shape="caret" style="transform: rotate(180deg)"></clr-icon>
+        </button>
+        <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+          <div aria-label="Dropdown header Action 1" clrDropdownItem>
+            Discounted Free Cashflow
+          </div>
+          <div aria-label="Dropdown header Action 1" clrDropdownItem>
+            Discounted Future Earnings
+          </div>
+          <div aria-label="Dropdown header Action 2" clrDropdownItem>
+            Revenue Multiple
+          </div>
+        </clr-dropdown-menu>
+      </clr-dropdown>
+    </div>
+  </div>
+</div>

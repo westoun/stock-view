@@ -1,0 +1,54 @@
+<header class="header-6">
+  <div class="branding">
+    <a href="javascript://" class="nav-link">
+      <clr-icon shape="vm-bug"></clr-icon>
+      <span class="title">Project F</span>
+    </a>
+  </div>
+
+  <div class="header-nav">
+    <a
+      routerLinkActive="active"
+      [attr.aria-selected]="router.url.includes('screener')"
+      class="nav-link nav-text"
+      routerLink="screener"
+      >Screener</a
+    >
+    <a
+      routerLinkActive="active"
+      [attr.aria-selected]="router.url.includes('companies')"
+      class="nav-link nav-text"
+      routerLink="companies"
+      >Companies</a
+    >
+    <a
+      routerLinkActive="active"
+      [attr.aria-selected]="router.url.includes('watchlist')"
+      class="nav-link nav-text"
+      routerLink="watchlist"
+      >Watchlist</a
+    >
+    <!-- <a
+      routerLinkActive="active"
+      [attr.aria-selected]="router.url.includes('industries')"
+      class="nav-link nav-text"
+      routerLink="industries"
+      >Industries</a
+    > -->
+  </div>
+
+  <!-- <form class="search">
+    <label for="search_input">
+      <input id="search_input" type="text" placeholder="Search for keywords..." />
+    </label>
+  </form> -->
+  <div class="header-actions">
+    <a href="javascript://" class="nav-link nav-icon" aria-label="settings">
+      <clr-icon shape="cog"></clr-icon>
+    </a>
+  </div>
+</header>
+
+<div class="content-container">
+  <router-outlet> </router-outlet>
+</div>

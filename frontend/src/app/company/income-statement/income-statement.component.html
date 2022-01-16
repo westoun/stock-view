@@ -1,0 +1,42 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th class="left">Name</th>
+      <th class="left" *ngFor="let year of years">
+        {{ year }}
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let key of keys">
+      <td class="left">
+        <a (click)="onDataTypeClick(key)">
+          {{ key.title }}
+        </a>
+      </td>
+      <td
+        class="right"
+        *ngFor="let dataPoint of financialDataPoints[key.gqlKey]"
+      >
+        {{ dataPoint | number }}
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<clr-modal [(clrModalOpen)]="modalDataType" clrModalSize="lg" [clrModalStaticBackdrop]="false">
+  <h3 class="modal-title">{{ modalDataType }}</h3>
+  <div class="modal-body">
+    <ngx-charts-line-chart
+      showXAxisLabel="true"
+      showYAxisLabel="true"
+      xAxis="true"
+      yAxis="true"
+      xAxisLabel="Fiscal Year"
+      [yAxisLabel]="modalDataType"
+      [results]="modalData"
+    >
+    </ngx-charts-line-chart>
+  </div>
+</clr-modal>

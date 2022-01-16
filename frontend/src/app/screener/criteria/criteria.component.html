@@ -1,0 +1,287 @@
+<h3 style="margin-bottom: 10px">Filter Criteria:</h3>
+<form class="screener" style="padding-left: 20px">
+  <div class="filter-criterium" *ngFor="let filter of filters">
+    <div>
+      {{ filter.numeratorType.title }}
+      <span *ngIf="filter.denominatorType">
+        / {{ filter.denominatorType.title }}</span
+      >
+      <span *ngIf="filter.comparisonType == GROWTH_COMPARISON_TYPE.title">
+        growth over the last 5 years is</span
+      >
+      {{ filter.comparisonOperator }}
+      {{ filter.comparisonValue }}
+
+      <span
+        *ngIf="
+          filter.comparisonType == GROWTH_COMPARISON_TYPE.title ||
+          filter.comparisonTarget != ABSOLUTE_COMPARISON_TARGET.title
+        "
+      >
+        %</span
+      >
+
+      <span
+        *ngIf="filter.comparisonTarget !== ABSOLUTE_COMPARISON_TARGET.title"
+      >
+        of {{ filter.comparisonTarget }}</span
+      >
+    </div>
+
+    <div>
+      <clr-icon shape="pencil" (click)="onEditFilterClicked(filter)"></clr-icon>
+      <clr-icon
+        shape="trash"
+        (click)="onDeleteFilterClicked(filter)"
+        style="margin-left: 10px"
+      ></clr-icon>
+    </div>
+  </div>
+
+  <button class="btn btn-outline btn-sm" (click)="onCreateFilterClicked()">
+    Add Filter Criterium
+  </button>
+</form>
+
+<button
+  class="btn btn-block btn-success-outline"
+  style="margin-top: 24px"
+  (click)="onApplyScreenerClicked()"
+  [disabled]="!filters.length"
+>
+  Apply Screening Criteria!
+</button>
+
+<!-- FILTER CRITERIUM CONFIGURATOR -->
+
+<clr-modal
+  [(clrModalOpen)]="selectedFilter"
+  clrModalSize="lg"
+  [clrModalStaticBackdrop]="false"
+  *ngIf="selectedFilter"
+>
+  <h3 class="modal-title">Filter Criterium Configurator</h3>
+  <div class="modal-body">
+    <div class="filter-preview-box">
+      <strong>Preview:</strong>
+
+      <i>
+        " Only show me companies where
+        <span style="color: blue" *ngIf="selectedFilter.numeratorType">
+          {{ selectedFilter.numeratorType?.title }}
+        </span>
+        <span style="color: blue" *ngIf="!selectedFilter.numeratorType">
+          [Financial Number]
+        </span>
+        <span style="color: red" *ngIf="selectedFilter.denominatorType">
+          / {{ selectedFilter.denominatorType.title }}</span
+        >
+        <span
+          *ngIf="selectedFilter.comparisonType == GROWTH_COMPARISON_TYPE.title"
+          style="color: green"
+        >
+          growth over the last 5 years is</span
+        >
+        <span
+          *ngIf="selectedFilter.comparisonOperator"
+          style="color: turquoise"
+        >
+          {{ selectedFilter.comparisonOperator }}</span
+        >
+        <span
+          *ngIf="selectedFilter.comparisonValue !== null"
+          style="color: purple"
+        >
+          {{ selectedFilter.comparisonValue }}</span
+        >
+        <span
+          *ngIf="selectedFilter.comparisonValue === null"
+          style="color: purple"
+        >
+          [Value]</span
+        >
+
+        <span
+          *ngIf="
+            selectedFilter.comparisonType == GROWTH_COMPARISON_TYPE.title ||
+            selectedFilter.comparisonTarget != ABSOLUTE_COMPARISON_TARGET.title
+          "
+          style="color: purple"
+        >
+          %</span
+        >
+
+        <span
+          *ngIf="
+            selectedFilter.comparisonTarget &&
+            selectedFilter.comparisonTarget !== ABSOLUTE_COMPARISON_TARGET.title
+          "
+          style="color: coral"
+        >
+          of all companies in {{ selectedFilter.comparisonTarget }}</span
+        >
+
+        .
+        "</i
+      >
+    </div>
+
+    <form #formPageTwo="ngForm">
+      <section class="form-block">
+        <clr-combobox-container>
+          <label style="color: blue">Numerator (Select 1)</label>
+          <clr-combobox
+            [(ngModel)]="selectedFilter.numeratorType"
+            name="numeratorSelect"
+            required
+          >
+            <ng-container *clrOptionSelected="let selected">
+              {{ selected?.title }}
+            </ng-container>
+            <clr-options>
+              <clr-option
+                *clrOptionItems="let type of TOTAL_DATA_TYPES; field: 'title'"
+                [clrValue]="type"
+              >
+                {{ type.title }}
+              </clr-option>
+            </clr-options>
+          </clr-combobox>
+          <clr-control-error>There was an error</clr-control-error>
+        </clr-combobox-container>
+
+        <clr-combobox-container>
+          <label style="color: red">Denominator (Select 0 or 1)</label>
+          <clr-combobox
+            [(ngModel)]="selectedFilter.denominatorType"
+            name="denominatorSelect"
+          >
+            <ng-container *clrOptionSelected="let selected">
+              {{ selected?.title }}
+            </ng-container>
+            <clr-options>
+              <clr-option
+                *clrOptionItems="let type of TOTAL_DATA_TYPES; field: 'title'"
+                [clrValue]="type"
+              >
+                {{ type.title }}
+              </clr-option>
+            </clr-options>
+          </clr-combobox>
+          <clr-control-error>There was an error</clr-control-error>
+        </clr-combobox-container>
+      </section>
+    </form>
+
+    <form #formPageTwo="ngForm">
+      <section class="form-block">
+        <clr-radio-container>
+          <label style="color: green">Comparison Type</label>
+          <clr-radio-wrapper *ngFor="let option of COMPARISON_TYPES">
+            <input
+              type="radio"
+              clrRadio
+              name="comparisonType"
+              required
+              [value]="option.title"
+              [(ngModel)]="selectedFilter.comparisonType"
+            />
+            <label>{{ option.title }}</label>
+          </clr-radio-wrapper>
+
+          <clr-control-error>There was an error</clr-control-error>
+        </clr-radio-container>
+
+        <clr-select-container>
+          <label style="color: turquoise">Comparison Operator</label>
+          <select
+            clrSelect
+            [(ngModel)]="selectedFilter.comparisonOperator"
+            name="comparisonOperatorSelect"
+          >
+            <option
+              *ngFor="let option of COMPARISON_OPERATORS"
+              [value]="option.title"
+            >
+              {{ option.title }}
+            </option>
+          </select>
+          <clr-control-error>There was an error</clr-control-error>
+        </clr-select-container>
+
+        <clr-input-container>
+          <label style="color: purple">Comparison Value </label>
+          <input
+            clrInput
+            placeholder="placehodlr"
+            name="comparisonValueInput"
+            type="number"
+            [(ngModel)]="selectedFilter.comparisonValue"
+          />
+          <clr-control-error>There was an error</clr-control-error>
+        </clr-input-container>
+
+        <clr-alert
+          *ngIf="
+            (selectedFilter.comparisonTarget ==
+              INDUSTRY_COMPARISON_TARGET.title ||
+              selectedFilter.comparisonTarget == ALL_COMPARISON_TARGET.title) &&
+            selectedFilter.comparisonValue !== null &&
+            !(
+              selectedFilter.comparisonValue >= 0 &&
+              selectedFilter.comparisonValue <= 100
+            )
+          "
+          clrAlertType="danger"
+          [clrAlertClosable]="false"
+        >
+          If <i>{{ selectedFilter.comparisonTarget }}</i> is selected as
+          comparison type, the specified value must be between 0 and 100!
+        </clr-alert>
+
+        <clr-radio-container>
+          <label style="color: coral">Comparison Target</label>
+          <clr-radio-wrapper *ngFor="let option of COMPARISON_TARGETS">
+            <input
+              type="radio"
+              clrRadio
+              name="comparisonTarget"
+              required
+              [value]="option.title"
+              [(ngModel)]="selectedFilter.comparisonTarget"
+            />
+            <label>{{ option.title }}</label>
+          </clr-radio-wrapper>
+        </clr-radio-container>
+      </section>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-outline" (click)="onWizardCanceled()">Cancel</button>
+    <button
+      class="btn btn-outline-success"
+      (click)="onWizardFinished()"
+      [disabled]="
+        !(
+          selectedFilter.numeratorType &&
+          selectedFilter.comparisonType &&
+          selectedFilter.comparisonTarget &&
+          selectedFilter.comparisonOperator &&
+          selectedFilter.comparisonValue !== null &&
+          !(
+            (selectedFilter.comparisonTarget ==
+              INDUSTRY_COMPARISON_TARGET.title ||
+              selectedFilter.comparisonTarget == ALL_COMPARISON_TARGET.title) &&
+            !(
+              selectedFilter.comparisonValue >= 0 &&
+              selectedFilter.comparisonValue <= 100
+            )
+          )
+        )
+      "
+    >
+      Save
+    </button>
+  </div>
+</clr-modal>

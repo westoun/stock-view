@@ -1,0 +1,97 @@
+<h2 class="kairos-space-between kairos-level2-header" *ngIf="company">
+  <div>
+    {{ company.CompanyName }} ({{ company.Ticker }})
+  </div>
+  <button *ngIf="!isInWatchlist" class="btn btn-outline" (click)="onToggleWatchlist()"><clr-icon shape="heart"></clr-icon> Save to watchlist</button>
+  <button *ngIf="isInWatchlist" class="btn btn-outline" (click)="onToggleWatchlist()"><clr-icon shape="heart-broken"></clr-icon> Remove from watchlist</button>
+</h2>
+
+
+
+<ul class="nav kairos-tab-list" role="tabList">
+  <!-- <li class="nav-item" role="presentation">
+    <button
+      class="btn btn-link nav-link"
+      routerLink="overview"
+      routerLinkActive="active"
+      [attr.aria-selected]="router.url.endsWith('overview')"
+      type="button"
+      aria-controls="tabs-content"
+      type="button"
+    >
+      Overview
+    </button>
+  </li> -->
+
+  <li class="nav-item" role="presentation">
+    <button
+      class="btn btn-link nav-link"
+      routerLink="dashboard"
+      routerLinkActive="active"
+      [attr.aria-selected]="router.url.endsWith('dashboard')"
+      type="button"
+      aria-controls="tabs-content"
+      type="button"
+    >
+      Dashboard
+    </button>
+  </li>
+
+  <li class="nav-item" role="presentation">
+    <button
+      class="btn btn-link nav-link"
+      routerLink="income-statement"
+      routerLinkActive="active"
+      [attr.aria-selected]="router.url.endsWith('income-statement')"
+      aria-controls="tabs-content"
+      type="button"
+    >
+      Income Statement
+    </button>
+  </li>
+
+
+  <li class="nav-item" role="presentation">
+    <button
+      class="btn btn-link nav-link"
+      routerLink="balance-sheet"
+      routerLinkActive="active"
+      [attr.aria-selected]="router.url.endsWith('balance-sheet')"
+      aria-controls="tabs-content"
+      type="button"
+    >
+      Balance Sheet
+    </button>
+  </li>
+
+  <li class="nav-item" role="presentation">
+    <button
+      class="btn btn-link nav-link"
+      routerLink="cashflow-statement"
+      routerLinkActive="active"
+      [attr.aria-selected]="router.url.endsWith('cashflow-statement')"
+      aria-controls="tabs-content"
+      type="button"
+    >
+      Cashflow Statement
+    </button>
+  </li>
+
+  <li class="nav-item" role="presentation">
+    <button
+      class="btn btn-link nav-link"
+      routerLink="valuation"
+      routerLinkActive="active"
+      [attr.aria-selected]="router.url.endsWith('valuation')"
+      aria-controls="tabs-content"
+      type="button"
+    >
+      Valuation
+    </button>
+  </li>
+</ul>
+
+<div class="kairos-fixed-tabs-background"></div>
+<div class="kairos-fixed-tabs-margin"></div>
+
+<router-outlet></router-outlet>

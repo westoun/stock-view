@@ -1,0 +1,181 @@
+<h3>Fair Price/Earnings Ratio Calculator</h3>
+
+<clr-accordion [clrAccordionMultiPanel]="true">
+  <clr-accordion-panel>
+    <clr-accordion-title> 1. Financial Stability </clr-accordion-title>
+    <clr-accordion-content *clrIfExpanded>
+      <clr-range-container>
+        <label>Financial Stability</label>
+        <input
+          type="range"
+          clrRange
+          [(ngModel)]="fairPEInput.financialStability"
+          (ngModelChange)="onInputChange()"
+          name="financialStability"
+        />
+        <clr-control-helper
+          >Selected Value:
+          {{ fairPEInput.financialStability }} %</clr-control-helper
+        >
+      </clr-range-container>
+    </clr-accordion-content>
+  </clr-accordion-panel>
+
+  <clr-accordion-panel>
+    <clr-accordion-title> 2. Market Position </clr-accordion-title>
+    <clr-accordion-content *clrIfExpanded>
+      <clr-select-container>
+        <label>Market Conditions</label>
+        <select
+          clrSelect
+          name="options"
+          [(ngModel)]="fairPEInput.marketType"
+          (ngModelChange)="onInputChange()"
+        >
+          <option *ngFor="let market of MARKET_TYPES" [value]="market">
+            {{ market }}
+          </option>
+        </select>
+        <clr-control-helper
+          >Select Type of Competitive Environment.</clr-control-helper
+        >
+      </clr-select-container>
+
+      <clr-range-container>
+        <label>Market Power among {{ fairPEInput.marketType || "..." }}</label>
+        <input
+          type="range"
+          clrRange
+          [(ngModel)]="fairPEInput.marketDegree"
+          (ngModelChange)="onInputChange()"
+          name="financialStability"
+        />
+        <clr-control-helper
+          >Selected Value: {{ fairPEInput.marketDegree }} %</clr-control-helper
+        >
+      </clr-range-container>
+    </clr-accordion-content>
+  </clr-accordion-panel>
+
+  <clr-accordion-panel>
+    <clr-accordion-title> 3. Profitability </clr-accordion-title>
+    <clr-accordion-content *clrIfExpanded>
+      <clr-input-container>
+        <label>Net Income</label>
+        <input
+          clrInput
+          [(ngModel)]="fairPEInput.netIncome"
+          (ngModelChange)="onNetIncomeInputChange()"
+          name="netIncome"
+          required
+        />
+        <clr-control-helper
+          >Data taken from last annual report. Adjust if
+          needed.</clr-control-helper
+        >
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Equity</label>
+        <input
+          clrInput
+          [(ngModel)]="fairPEInput.equity"
+          (ngModelChange)="onEquityInputChange()"
+          name="equity"
+          required
+        />
+        <clr-control-helper
+          >Data taken from last annual report. Adjust if
+          needed.</clr-control-helper
+        >
+      </clr-input-container>
+
+      <clr-input-container>
+        <label>Return on Equity</label>
+        <input
+          clrInput
+          [(ngModel)]="fairPEInput.returnOnEquity"
+          (ngModelChange)="onInputChange()"
+          name="returnOnEquity"
+          required
+        />
+        <clr-control-helper>Adjust if needed.</clr-control-helper>
+      </clr-input-container>
+    </clr-accordion-content>
+  </clr-accordion-panel>
+
+  <clr-accordion-panel>
+    <clr-accordion-title>4. Future Growth</clr-accordion-title>
+    <clr-accordion-content *clrIfExpanded>
+      <clr-input-container>
+        <label>Growth</label>
+        <input
+          clrInput
+          [(ngModel)]="fairPEInput.growth"
+          (ngModelChange)="onInputChange()"
+          name="growth"
+          required
+        />
+        <clr-control-helper
+          >Data taken from last 5 year growth. Adjust
+          accordingly!.</clr-control-helper
+        >
+      </clr-input-container>
+    </clr-accordion-content>
+  </clr-accordion-panel>
+
+  <clr-accordion-panel>
+    <clr-accordion-title>5. Individual Adjustments</clr-accordion-title>
+    <clr-accordion-content *clrIfExpanded>
+      <clr-range-container>
+        <label>Base Value</label>
+        <input
+          min="0"
+          max="10"
+          step="1"
+          type="range"
+          clrRange
+          [(ngModel)]="fairPEInput.baseValue"
+          (ngModelChange)="onInputChange()"
+          name="baseValue"
+        />
+        <clr-control-helper
+          >Starting PE-ratio: {{ fairPEInput.baseValue }}
+          (default: 7)
+        </clr-control-helper>
+      </clr-range-container>
+
+      <clr-range-container>
+        <label>Individual Adjustments</label>
+        <input
+          min="-10"
+          max="10"
+          step="1"
+          type="range"
+          clrRange
+          [(ngModel)]="fairPEInput.individualAdjustments"
+          (ngModelChange)="onInputChange()"
+          name="individualAdjustments"
+        />
+        <clr-control-helper
+          >Company-specific adjustments in PE points:
+          {{ fairPEInput.individualAdjustments || 0 }}</clr-control-helper
+        >
+      </clr-range-container>
+    </clr-accordion-content>
+  </clr-accordion-panel>
+</clr-accordion>
+
+<button
+  class="btn btn-block"
+  [disabled]="
+    !fairPEInput.marketType &&
+    fairPEInput.returnOnEquity !== null &&
+    fairPEInput.growth !== null
+  "
+  (click)="onComputeClicked()"
+>
+  Compute Fair PE
+</button>
+
+<p *ngIf="fairPE">The fair Price to Earnings ratio is: {{ fairPE }}.</p>

@@ -1,0 +1,27 @@
+.chart-configurator {
+  .btn-block {
+    border: 0px;
+  }
+
+  .modal-body {
+    overflow: hidden;
+
+    .chart-categories {
+      overflow: hidden;
+      width: 30%;
+      min-height: 80vh;
+      border-right: 1px solid darkgray;
+    }
+
+    .chart-details {
+      overflow: scroll;
+      width: 70%;
+      padding-left: 24px;
+
+      .chart-card {
+        width: 600px;
+      }
+    }
+  }
+}
+

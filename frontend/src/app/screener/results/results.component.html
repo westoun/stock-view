@@ -1,0 +1,58 @@
+
+<!-- SCREENER RESULTS -->
+
+<h3 *ngIf="filterResults.length" class="kairos-space-between">
+  Filter Results ({{ filterResults.length }}):
+  <a
+    (click)="showResultPropertiesModal = true"
+    class="nav-link nav-icon"
+    aria-label="settings"
+  >
+    <clr-icon shape="cog"></clr-icon>
+  </a>
+</h3>
+
+<table class="table" *ngIf="filterResults.length">
+  <thead>
+    <tr>
+      <th class="left">Company Name</th>
+      <th class="left" *ngFor="let property of resultProperties">{{property.title}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let company of filterResults">
+      <td>
+        <a class="nav-link" [routerLink]="'../companies/' + company.SimFinId">
+          {{ company.CompanyName }} ({{ company.Ticker }})
+        </a>
+      </td>
+      <td *ngFor="let property of resultProperties">{{company[property.title] | number}}</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+<!-- FILTER RESULT PROPERTIES MODAL -->
+
+<clr-modal
+  [(clrModalOpen)]="showResultPropertiesModal"
+  clrModalSize="md"
+  [clrModalStaticBackdrop]="false"
+  (clrModalOpenChange)="onPropertyModalClosed()"
+>
+  <h3 class="modal-title">Filter Result Properties</h3>
+  <div class="modal-body" style="display: flex">
+    <clr-checkbox-container>
+      <clr-checkbox-wrapper *ngFor="let chartType of TOTAL_CHART_TYPES">
+        <input type="checkbox" clrCheckbox value="chartType" name="options" [(ngModel)]="chartType.selected" (ngModelChange)="onCheckboxChange()"/>
+        <label>{{chartType.title}}</label>
+      </clr-checkbox-wrapper>
+    </clr-checkbox-container>
+  </div>
+
+</clr-modal>

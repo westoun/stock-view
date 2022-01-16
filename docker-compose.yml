@@ -1,0 +1,113 @@
+version: '3.7'
+services:
+  db:
+    image: postgres
+    container_name: db-service
+    env_file:
+      - .docker.env
+    volumes:
+      - ./.pgdata:/var/lib/postgresql/data
+    networks:
+      - kairosnetwork
+    ports:
+      - 5433:5432
+
+  db-seed:
+    build:
+      context: ./seed
+      dockerfile: Dockerfile
+    container_name: db-seed
+    env_file:
+      - .docker.env
+    depends_on:
+      - db
+    networks:
+      - kairosnetwork
+    links:
+      - db:db
+
+  screener-service:
+    build:
+      context: ./screener_server
+      dockerfile: Dockerfile
+    container_name: screener-service
+    env_file:
+      - .docker.env
+    depends_on:
+      - db
+      - db-seed
+    networks:
+      - kairosnetwork
+    ports:
+      - 5000:5000
+    links:
+      - db:db
+      
+  quotes-service:
+    build:
+      context: ./stock_price_server
+      dockerfile: Dockerfile 
+    container_name: quotes-service 
+    env_file:
+      - .docker.env
+    depends_on:
+      - db
+      - db-seed
+    networks:
+      - kairosnetwork
+    ports:
+      - 5001:5001
+    links:
+      - db:db
+
+  company-data-service:
+    build:
+      context: ./company_data_server
+      dockerfile: Dockerfile
+    container_name: company-data-service
+    env_file:
+      - .docker.env
+    depends_on:
+      - db
+      - db-seed
+    networks:
+      - kairosnetwork
+    ports:
+      - 8088:8088
+    links:
+      - db:db
+
+  
+  frontend-service:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile 
+    container_name: frontend-service 
+    networks:
+      - kairosnetwork
+    env_file:
+      - .docker.env
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf
+    ports: 
+      - 81:81
+
+
+  reverse-proxy:
+    image: nginx:1.17.10
+    container_name: reverse-proxy
+    depends_on:
+        - screener-service
+        - company-data-service
+        - frontend-service
+    networks:
+      - kairosnetwork
+    volumes:
+      - ./reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+
+  
+
+networks:
+  kairosnetwork:

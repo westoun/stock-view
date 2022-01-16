@@ -1,0 +1,102 @@
+<!-- margin 24 -->
+
+<div class="kairos-dashboard" style="padding: 24px">
+  <div class="clr-row">
+    <div class="clr-col-4 card-shadow">
+      <div class="card-header">Revenue & Net Income</div>
+      <p></p>
+
+      <ngx-charts-line-chart
+        showXAxisLabel="true"
+        showYAxisLabel="true"
+        xAxis="true"
+        yAxis="true"
+        [results]="revenueIncomeData"
+        [view]="[400, 250]"
+      >
+      </ngx-charts-line-chart>
+    </div>
+
+
+    <div class="clr-col-4 card-shadow">
+      <div class="card-header">Earnings per Share & Dividends</div>
+      <p></p>
+
+      <ngx-charts-line-chart
+        showXAxisLabel="true"
+        showYAxisLabel="true"
+        xAxis="true"
+        yAxis="true"
+        [results]="epsDividendsData"
+        [view]="[400, 250]"
+      >
+      </ngx-charts-line-chart>
+    </div>
+
+
+    <div class="clr-col-4 card-shadow">
+      <div class="card-header">Revenue Margin</div>
+      <p></p>
+
+      <ngx-charts-line-chart
+        showXAxisLabel="true"
+        showYAxisLabel="true"
+        xAxis="true"
+        yAxis="true"
+        [results]="revenueMarginData"
+        [view]="[400, 250]"
+      >
+      </ngx-charts-line-chart>
+    </div>
+
+
+
+  </div>
+
+  <div class="clr-row">
+    <!-- <div class="clr-col-6 card-shadow">
+      <div class="card-header">Free Cashflow</div>
+      <p></p>
+
+      <ngx-charts-line-chart
+        showXAxisLabel="true"
+        showYAxisLabel="true"
+        xAxis="true"
+        yAxis="true"
+        [results]="freeCashflowData"
+        [view]="[500, 250]"
+      >
+      </ngx-charts-line-chart>
+    </div> -->
+
+    <div class="clr-col-6 card-shadow">
+      <div class="card-header">Asset Turnover</div>
+      <p></p>
+
+      <ngx-charts-line-chart
+        showXAxisLabel="true"
+        showYAxisLabel="true"
+        xAxis="true"
+        yAxis="true"
+        [results]="assetTurnoverData"
+        [view]="[500, 250]"
+      >
+      </ngx-charts-line-chart>
+    </div>
+
+    <div class="clr-col-6 card-shadow">
+      <div class="card-header">Return on Equity</div>
+      <p></p>
+
+      <ngx-charts-line-chart
+        showXAxisLabel="true"
+        showYAxisLabel="true"
+        xAxis="true"
+        yAxis="true"
+        [results]="returnOnEquityData"
+        [view]="[500, 250]"
+      >
+      </ngx-charts-line-chart>
+    </div>
+  </div>
+</div>

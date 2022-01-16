@@ -1,0 +1,370 @@
+<button class="btn btn-primary btn-block" (click)="addItem()">Add Item</button>
+
+<gridster [options]="options">
+  <gridster-item [item]="item" *ngFor="let item of dashboard; let i = index">
+    <div *ngIf="item.data && dashboardDataSets[item.id]">
+      <h4 style="text-align: center">{{ item.title }}</h4>
+      <ngx-charts-line-chart
+        *ngIf="item.chartType === VALUE_DEVELOPMENT_CHART_TYPE"
+        [results]="dashboardDataSets[item.id]"
+        [view]="[item.width, item.hight]"
+        xAxis="true"
+        yAxis="true"
+        showXAxisLabel="true"
+        showYAxisLabel="true"
+        xAxisLabel="Time"
+      >
+      </ngx-charts-line-chart>
+      <ngx-charts-bar-vertical
+        *ngIf="item.chartType === INDUSTRY_COMPARISON_CHART_TYPE"
+        [results]="dashboardDataSets[item.id]"
+        [scheme]="dashboardColorSchemes[item.id]"
+        [view]="[item.width, item.hight]"
+        xAxis="true"
+        yAxis="true"
+        showXAxisLabel="true"
+        showYAxisLabel="true"
+        yAxisLabel="Companies"
+        xAxisLabel="Value Span"
+      >
+      </ngx-charts-bar-vertical>
+    </div>
+
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+      "
+      *ngIf="!(item.data && dashboardDataSets[item.id])"
+    >
+      <button
+        class="btn btn-small"
+        style="margin: 0"
+        (click)="onCreateChartClicked(item)"
+      >
+        Create
+      </button>
+    </div>
+  </gridster-item>
+</gridster>
+
+<clr-modal
+  [(clrModalOpen)]="openChartConfigurator"
+  clrModalSize="xl"
+  [clrModalStaticBackdrop]="true"
+  (clrModalOpenChange)="resetConfigurator()"
+  class="chart-configurator"
+>
+  <h3 class="modal-title kairos-space-between">
+    <span> Chart Configurator </span>
+
+    <clr-button-group>
+      <clr-button
+        [class]="
+          selectedChartType === VALUE_DEVELOPMENT_CHART_TYPE
+            ? 'btn-primary'
+            : ''
+        "
+        (click)="onSelectChartType(VALUE_DEVELOPMENT_CHART_TYPE)"
+      >
+        <clr-icon shape="line-chart"></clr-icon>
+        Value Development</clr-button
+      >
+      <clr-button
+        [class]="
+          selectedChartType === INDUSTRY_COMPARISON_CHART_TYPE
+            ? 'btn-primary'
+            : ''
+        "
+        (click)="onSelectChartType(INDUSTRY_COMPARISON_CHART_TYPE)"
+      >
+        <clr-icon shape="bell-curve"></clr-icon>
+        Industry Comparison</clr-button
+      >
+    </clr-button-group>
+  </h3>
+  <div class="modal-body" style="display: flex">
+    <div class="chart-categories">
+      <button
+        [style.backgroundColor]="
+          currentConfiguratorPage === MARKET_RATIO_CONFIGURATOR_PAGE
+            ? 'var(--clr-btn-default-hover-bg-color, #e3f5fc)'
+            : 'inherit'
+        "
+        (click)="onChangeConfiguratorPage(MARKET_RATIO_CONFIGURATOR_PAGE)"
+        class="btn btn-block"
+        [disabled]="selectedChartType === INDUSTRY_COMPARISON_CHART_TYPE"
+      >
+        Market Ratios
+      </button>
+      <button
+        [style.backgroundColor]="
+          currentConfiguratorPage === FINANCIAL_STABILITY_CONFIGURATOR_PAGE
+            ? 'var(--clr-btn-default-hover-bg-color, #e3f5fc)'
+            : 'inherit'
+        "
+        (click)="
+          onChangeConfiguratorPage(FINANCIAL_STABILITY_CONFIGURATOR_PAGE)
+        "
+        class="btn btn-block"
+      >
+        Financial Stability
+      </button>
+      <button
+        [style.backgroundColor]="
+          currentConfiguratorPage === PROFITABILITY_CONFIGURATOR_PAGE
+            ? 'var(--clr-btn-default-hover-bg-color, #e3f5fc)'
+            : 'inherit'
+        "
+        (click)="onChangeConfiguratorPage(PROFITABILITY_CONFIGURATOR_PAGE)"
+        class="btn btn-block"
+      >
+        Profitability
+      </button>
+      <button
+        [style.backgroundColor]="
+          currentConfiguratorPage === OPERATIONAL_EFFICIENCY_CONFIGURATOR_PAGE
+            ? 'var(--clr-btn-default-hover-bg-color, #e3f5fc)'
+            : 'inherit'
+        "
+        (click)="
+          onChangeConfiguratorPage(OPERATIONAL_EFFICIENCY_CONFIGURATOR_PAGE)
+        "
+        class="btn btn-block"
+      >
+        Operational Efficiency
+      </button>
+      <button
+        [style.backgroundColor]="
+          currentConfiguratorPage === CUSTOM_CONFIGURATOR_PAGE
+            ? 'var(--clr-btn-default-hover-bg-color, #e3f5fc)'
+            : 'inherit'
+        "
+        (click)="onChangeConfiguratorPage(CUSTOM_CONFIGURATOR_PAGE)"
+        class="btn btn-block"
+      >
+        Custom
+      </button>
+    </div>
+
+    <div class="chart-details">
+      <div *ngIf="currentConfiguratorPage === MARKET_RATIO_CONFIGURATOR_PAGE">
+        <h3>Market Valuation Indicators</h3>
+
+        <div *ngIf="selectedChartType !== INDUSTRY_COMPARISON_CHART_TYPE">
+          <div
+            *ngFor="let ratioType of MARKET_RATIO_TYPES"
+            (click)="onSelectRatioType(ratioType)"
+            [style.boxShadow]="
+              selectedRatioType && selectedRatioType.title === ratioType.title
+                ? '0 .15rem 0 0 #179bd3'
+                : '0 0.15rem 0 0 #dedede'
+            "
+            [style.border]="
+              selectedRatioType && selectedRatioType.title === ratioType.title
+                ? '0.05rem solid #179bd3'
+                : '0.05rem solid #dedede'
+            "
+            class="card clickable chart-card"
+            disabled
+          >
+            <div class="card-header">
+              {{ ratioType.title }}
+            </div>
+            <div class="card-block">
+              <div class="card-text">
+                <div>Numerator: {{ ratioType.numeratorType.title }}</div>
+                <div>Denominator: {{ ratioType.denominatorType.title }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="
+          currentConfiguratorPage === FINANCIAL_STABILITY_CONFIGURATOR_PAGE
+        "
+      >
+        <h3>Financial Stability Indicators</h3>
+
+        <div
+          *ngFor="let ratioType of FINANCIAL_STABILITY_RATIO_TYPES"
+          (click)="onSelectRatioType(ratioType)"
+          [style.boxShadow]="
+            selectedRatioType && selectedRatioType.title === ratioType.title
+              ? '0 .15rem 0 0 #179bd3'
+              : '0 0.15rem 0 0 #dedede'
+          "
+          [style.border]="
+            selectedRatioType && selectedRatioType.title === ratioType.title
+              ? '0.05rem solid #179bd3'
+              : '0.05rem solid #dedede'
+          "
+          class="card clickable chart-card"
+        >
+          <div class="card-header">
+            {{ ratioType.title }}
+          </div>
+          <div class="card-block">
+            <div class="card-text">
+              <div>Numerator: {{ ratioType.numeratorType.title }}</div>
+              <div>Denominator: {{ ratioType.denominatorType.title }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="currentConfiguratorPage === PROFITABILITY_CONFIGURATOR_PAGE">
+        <h3>Profitability Indicators</h3>
+        <div
+          *ngFor="let ratioType of PROFITABILITY_RATIO_TYPES"
+          (click)="onSelectRatioType(ratioType)"
+          [style.boxShadow]="
+            selectedRatioType && selectedRatioType.title === ratioType.title
+              ? '0 .15rem 0 0 #179bd3'
+              : '0 0.15rem 0 0 #dedede'
+          "
+          [style.border]="
+            selectedRatioType && selectedRatioType.title === ratioType.title
+              ? '0.05rem solid #179bd3'
+              : '0.05rem solid #dedede'
+          "
+          class="card clickable"
+          style="width: 600px"
+        >
+          <div class="card-header">
+            {{ ratioType.title }}
+          </div>
+          <div class="card-block">
+            <div class="card-text">
+              <div>Numerator: {{ ratioType.numeratorType.title }}</div>
+              <div>Denominator: {{ ratioType.denominatorType.title }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="
+          currentConfiguratorPage === OPERATIONAL_EFFICIENCY_CONFIGURATOR_PAGE
+        "
+      >
+        <h3>Operational Efficiency Indicators</h3>
+        <div
+          *ngFor="let ratioType of OPERATIONAL_EFFICIENCY_RATIO_TYPES"
+          (click)="onSelectRatioType(ratioType)"
+          [style.boxShadow]="
+            selectedRatioType && selectedRatioType.title === ratioType.title
+              ? '0 .15rem 0 0 #179bd3'
+              : '0 0.15rem 0 0 #dedede'
+          "
+          [style.border]="
+            selectedRatioType && selectedRatioType.title === ratioType.title
+              ? '0.05rem solid #179bd3'
+              : '0.05rem solid #dedede'
+          "
+          class="card clickable"
+        >
+          <div class="card-header">
+            {{ ratioType.title }}
+          </div>
+          <div class="card-block">
+            <div class="card-text">
+              <div>Numerator: {{ ratioType.numeratorType.title }}</div>
+              <div>Denominator: {{ ratioType.denominatorType.title }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="currentConfiguratorPage === CUSTOM_CONFIGURATOR_PAGE">
+        <h3>Custom Indicator</h3>
+
+        <clr-input-container>
+          <label>Chart Title</label>
+          <input clrInput name="name" required [(ngModel)]="customChartTitle" />
+          <clr-control-error>This field cannot be empty!</clr-control-error>
+        </clr-input-container>
+
+        <clr-combobox-container>
+          <label>Numerator (Select 1)</label>
+          <clr-combobox
+            [(ngModel)]="customChartNumeratorType"
+            name="numeratorSelect"
+            required
+          >
+            <ng-container *clrOptionSelected="let selected">
+              {{ selected?.title }}
+            </ng-container>
+            <clr-options>
+              <clr-option
+                *clrOptionItems="let type of TOTAL_DATA_TYPES; field: 'title'"
+                [clrValue]="type"
+              >
+                <span
+                  *ngIf="
+                    !(
+                      selectedChartType === INDUSTRY_COMPARISON_CHART_TYPE &&
+                      type.gqlKey === STOCK_PRICE_KEY
+                    )
+                  "
+                >
+                  {{ type.title }}
+                </span>
+              </clr-option>
+            </clr-options>
+          </clr-combobox>
+          <clr-control-error>There was an error</clr-control-error>
+        </clr-combobox-container>
+
+        <clr-combobox-container>
+          <label>Denominator (Select 0 or 1)</label>
+          <clr-combobox
+            [(ngModel)]="customChartDenominatorType"
+            name="denominatorSelect"
+          >
+            <ng-container *clrOptionSelected="let selected">
+              {{ selected?.title }}
+            </ng-container>
+            <clr-options>
+              <clr-option
+                *clrOptionItems="let type of TOTAL_DATA_TYPES; field: 'title'"
+                [clrValue]="type"
+              >
+                {{ type.title }}
+              </clr-option>
+            </clr-options>
+          </clr-combobox>
+          <clr-control-error>There was an error</clr-control-error>
+        </clr-combobox-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="resetConfigurator()">
+      Cancel
+    </button>
+    <button
+      [disabled]="
+        !(selectedRatioType || (customChartTitle && customChartNumeratorType))
+      "
+      type="button"
+      class="btn btn-primary"
+      (click)="onAddChart()"
+    >
+      Add to Dashboard
+    </button>
+  </div>
+</clr-modal>
+
+<button
+  class="btn btn-block btn-warning btn-warning-outline"
+  (click)="onClearDashboard()"
+>
+  Clear Dashboard
+</button>

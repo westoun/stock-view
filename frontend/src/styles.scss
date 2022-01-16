@@ -1,0 +1,66 @@
+/* You can add global styles to this file, and also import other style files */
+
+p {
+  margin: 0;
+}
+
+.kairos-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.kairos-center-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-title-wrapper {
+  width: 100% !important;
+}
+
+.header-6 {
+  position: fixed;
+  width: 100vw;
+  z-index: 1001;
+}
+
+.kairos-level2-header {
+  position: fixed;
+  margin-top: 84px !important;
+  width: calc(100% - 40px);
+  background-color: rgba(255,255,255,0.95);
+  z-index: 1000;
+}
+
+.kairos-tab-list {
+  position: fixed;
+  background-color: rgba(255,255,255,0.95);
+  width: calc(100% - 40px);
+  margin-top: 132px !important;
+  z-index: 1000;
+}
+
+.kairos-fixed-header-margin {
+  margin-top: 132px !important;
+}
+
+.kairos-fixed-tabs-margin {
+  margin-top: 176px !important;
+}
+
+.kairos-fixed-header-background {
+  background-color: rgba(255,255,255,0.95);
+  position: fixed;
+  height: 132px !important;
+  width: 100vw;
+  z-index: 999;
+}
+
+.kairos-fixed-tabs-background {
+  background-color: rgba(255,255,255,0.95);
+  position: fixed;
+  height: 176px !important;
+  width: 100vw;
+  z-index: 999;
+}

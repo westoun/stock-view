@@ -1,0 +1,39 @@
+<h2 class="kairos-level2-header">Company Search</h2>
+
+<div class="kairos-fixed-header-background"></div>
+<div class="kairos-fixed-header-margin"></div>
+
+<form class="search">
+  <label for="search_input">
+    <input
+      [(ngModel)]="searchString"
+      name="companySearch"
+      id="search_input"
+      type="text"
+      placeholder="Search for company name or ticker..."
+      style="width: 100%"
+      (ngModelChange)="onUpdateSearch()"
+    />
+  </label>
+</form>
+
+<div *ngIf="companies.length">
+  <h3>
+    Search Results
+    <span *ngIf="companies.length > 0">({{ companies.length }} results)</span>
+  </h3>
+  <div *ngFor="let company of companies">
+    <a class="btn btn-link nav-link" (click)="onNavigate(company)">
+      {{ company.CompanyName }} ({{ company.Ticker }})
+    </a>
+  </div>
+</div>
+
+<div *ngIf="!companies.length">
+  <h3>Recently Searched</h3>
+  <div *ngFor="let company of recentlySearchedCompanies">
+    <a class="btn btn-link nav-link" (click)="onNavigate(company)">
+      {{ company.CompanyName }} ({{ company.Ticker }})
+    </a>
+  </div>
+</div>

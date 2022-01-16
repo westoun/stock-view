@@ -1,0 +1,16 @@
+<h2 class="kairos-level2-header">Company Screener</h2>
+<div class="kairos-fixed-header-background"></div>
+
+<div class="kairos-fixed-header-margin"></div>
+<hr />
+
+
+<app-criteria (filterResultsChange)="onFilterResultsChange($event)"></app-criteria>
+<app-results *ngIf="filterResults" [filterResults]="filterResults"></app-results>
+
+
+
+
+
+
+

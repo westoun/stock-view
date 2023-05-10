@@ -48,15 +48,7 @@ started providing a postgres database.
 Before starting the application, either manually or via docker-compose, make
 sure you have a _.env_ or _.docker.env_ file located in the top level of the application code.
 
-This file must contain the following elements:
-```
-POSTGRES_PASSWORD=postgres
-POSTGRES_USER=postgres
-POSTGRES_DB=stockview
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
-SEED_DB=0
-```
+This file must contain the fields specified in _.template.env_.
 
 *SEED_DB* should be set to either 0 or 1, depending if the database has been initialized and
 seeded during previous runs. This does not have any affect if the 

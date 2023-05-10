@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from dotenv import dotenv_values
+from os import environ
 import psycopg2
 import psycopg2.extras
 import simfin as sf
@@ -8,9 +10,6 @@ import sys
 from SQL_QUERIES import DROP_EVERYTHING_QUERY, \
     CREATE_FINANCIAL_STATEMENT_VIEW_QUERY, \
     DROP_FINANCIAL_STATEMENT_TABLE  # nopep8
-
-
-DATA_DIR = "/Users/christophstein/Documents/kairos/tmp/simfin"
 
 
 def dbfy_column_name(text):
@@ -63,7 +62,7 @@ def seed_table(table_name, df, engine, connection, cursor):
 def seed_tables(engine, connection, cursor):
     df = sf.load_industries()
     seed_table("industries", df, engine, connection, cursor)
-    
+
     df = sf.load_companies(market='us')
     seed_table("companies", df, engine, connection, cursor)
 
@@ -75,7 +74,6 @@ def seed_tables(engine, connection, cursor):
 
     df = sf.load_cashflow(variant='annual', market='us')
     seed_table("cashflow_statement", df, engine, connection, cursor)
-
 
 
 def drop_existing_tables(cursor, connection):
@@ -100,8 +98,16 @@ def create_financial_statement_view(cursor, connection):
 
 def seed_simfin(engine, connection, cursor):
 
-    sf.set_api_key("free")  # equals official python package demo key
-    sf.set_data_dir(DATA_DIR)
+    env = {
+        **dotenv_values(),
+        **environ
+    }
+
+    simfin_api_key = env["SIMFIN_API_KEY"]
+    data_dir = env["SIMFIN_DATA_DIR"]
+
+    sf.set_api_key(simfin_api_key)
+    sf.set_data_dir(data_dir)
 
     drop_existing_tables(cursor, connection)
 

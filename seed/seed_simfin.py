@@ -12,6 +12,9 @@ from SQL_QUERIES import DROP_EVERYTHING_QUERY, \
     DROP_FINANCIAL_STATEMENT_TABLE  # nopep8
 
 
+DATA_DIR = "/Users/christophstein/Documents/kairos/tmp/simfin"
+
+
 def dbfy_column_name(text):
     text = text.replace(".", "")
     text = text.replace(",", "")
@@ -104,10 +107,9 @@ def seed_simfin(engine, connection, cursor):
     }
 
     simfin_api_key = env["SIMFIN_API_KEY"]
-    data_dir = env["SIMFIN_DATA_DIR"]
 
     sf.set_api_key(simfin_api_key)
-    sf.set_data_dir(data_dir)
+    sf.set_data_dir(DATA_DIR)
 
     drop_existing_tables(cursor, connection)
 
